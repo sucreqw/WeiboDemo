@@ -22,8 +22,6 @@ import com.sucre.myThread.Thread4Net;
  */
 public class MainFrom extends JFrame implements ActionListener {
 
-	
-
 	// 创建一个button,并设置标题
 	JButton loadin = new JButton("导入id");
 	JButton loadVid = new JButton("导入vid");
@@ -41,13 +39,14 @@ public class MainFrom extends JFrame implements ActionListener {
 	JLabel messageLabel = new JLabel();
 
 	// 定义帮忙信息,jlabel 支持html内容
-	String help = "<html> 1,在文本框输入d1,回车,等于删第一个vid.<br></html> ";
-	
-    //定义一个自己.
-	static MainFrom f= new MainFrom("统一窗体");
+	String help = "<html> 1,在文本框输入d1,回车,等于删第一个vid.<br>2,在文本框输入showvid,回车,等于显示第一个vid<br></html> ";
+
+	// 定义一个自己.
+	static MainFrom f = new MainFrom("统一窗体");
+
 	// 用构造器新建一个JFrame,并设置标题.
 	private MainFrom(String title) {
-		this.f=f;
+		this.f = f;
 		// 定义x,y,w,h,位置及大小
 		int x = 500, y = 40, w = 100, h = 20;
 		JFrame jf = new JFrame(title);
@@ -158,7 +157,7 @@ public class MainFrom extends JFrame implements ActionListener {
 		// 加入元素到list中.
 		MyUtil.listVid.add(fileName.getText().toString());
 		feedBack.setText("vid加入成功<==>" + String.valueOf(MyUtil.listVid.getSize()));
-		//messageLabel.setText(MyUtil.listVid.get(0));
+		// messageLabel.setText(MyUtil.listVid.get(0));
 	}
 
 	// 按钮addCookie被点击.
@@ -169,19 +168,24 @@ public class MainFrom extends JFrame implements ActionListener {
 
 	// 按钮login被点击.
 	private void login_click() {
-		if(MyUtil.listVid.getSize()!=0) {
-		Thread4Net tt = new SinaLogin(MyUtil.listId.getSize() - 1,false);
-		Thread t = new Thread(tt);
-		t.start();
-		}else {
+		if (MyUtil.listVid.getSize() != 0) {
+			Thread4Net tt = new SinaLogin(MyUtil.listId.getSize() - 1, false);
+			Thread t = new Thread(tt);
+			t.start();
+		} else {
 			messageLabel.setText("vid不能为空...");
 		}
 	}
 
-	// 按钮login被点击.
+	// 按钮开始被点击.
 	private void vote_click() {
-		feedBack.setText("vote");
-		feedBack.setText(MyUtil.listId.toString());
+		if (MyUtil.listVid.getSize() != 0 && MyUtil.listCookie.getSize()!=0) {
+			Thread4Net tt = new SinaChackin(MyUtil.listCookie.getSize() - 1, false);
+			Thread t = new Thread(tt);
+			t.start();
+		} else {
+			messageLabel.setText("vid和cookie列表不能为空");
+		}
 	}
 
 	// 文本框按下回车!
@@ -196,21 +200,23 @@ public class MainFrom extends JFrame implements ActionListener {
 			// 取得要删除的索引,java从零开始,所以要减1
 			int index = (Integer.parseInt(str.substring(1, str.length()))) - 1;
 			feedBack.setText(MyUtil.listVid.remove(index));
-		}else if(str.equals("showvid")) {
-			//打印第一个vid
+		} else if (str.equals("showvid")) {
+			// 打印第一个vid
 			messageLabel.setText(MyUtil.listVid.get(0));
-			
+
 		} else if (str.equals("help")) {
 			messageLabel.setText(help);
 		}
 
 	}
-	//打印最新情况
+
+	// 打印最新情况
 	public void prints(String data) {
 		messageLabel.setText(data);
 	}
-	//定义方法暴露自己,以显示当前进度.
+
+	// 定义方法暴露自己,以显示当前进度.
 	public static MainFrom GetInstance() {
-	return f ;
+		return f;
 	}
 }

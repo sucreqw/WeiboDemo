@@ -14,7 +14,7 @@ public class SinaLogin extends Thread4Net {
 	// 索引参数
 	private int index;
 	private String[] l;
-	MainFrom f;
+	public MainFrom f;
 	// 传递参数给父类.
 	protected SinaLogin(int u, boolean isCricle) {
 		super(u, isCricle);
@@ -66,6 +66,7 @@ public class SinaLogin extends Thread4Net {
 		f.prints("正在签到."+st + String.valueOf(index));
 		ret = p.goPost("m.weibo.cn", 443, getInfo(cookie,st));
 		ret = p.goPost("m.weibo.cn", 443, getTask(st,cookie));
+		f.prints("签到完成."+st + String.valueOf(index));
 		
 	}
 	
