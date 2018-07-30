@@ -25,7 +25,7 @@ public class SinaLogin extends Thread4Net {
 	@Override
 	public int doWork(int index) {
 		this.index = index;
-	   f.prints("正在登录:" + String.valueOf(index));
+	   f.prints("正在登录:" + String.valueOf(index+1));
 		// 分配cookie或者账号
 		l = MyUtil.listId.get(index).split("[^@.\\w]");
 		// 发送网络请求登录
@@ -35,38 +35,44 @@ public class SinaLogin extends Thread4Net {
 	    ret = p.goPost("passport.weibo.cn", 443, loginData());
 		// 处理返回数据
         cookie += MyUtil.getAllCookie(ret);
-        if (!"".equals(ret)) {
-			MyUtil.outPutData("cookie.txt", cookie);
-			f.prints("正在取st:" + String.valueOf(index));
+        if (!"".equals(cookie)) {
+			MyUtil.outPutData("cookie.txt", cookie + "|" + l[0]+ "|" + l[1] +"|"+ MyUtil.midWrod("uid\":\"", "\"}", ret));
+			f.prints("正在取st:" + String.valueOf(index+1));
 			ret = p.goPost("m.weibo.cn", 443, getSt(cookie));
 			String st=MyUtil.midWrod("st: '", "',", ret);
 			if(!"".equals(st)) {
-				f.prints("正在二次登录:" + String.valueOf(index));
+				f.prints("正在二次登录:" + String.valueOf(index+1));
 				ret = p.goPost("m.weibo.cn", 443, getTask(st,cookie));
-				f.prints("正在输入邀请码." + String.valueOf(index));
+				f.prints("休息3秒后输入邀请码." + String.valueOf(index+1));
+				//延时操作
+				MyUtil.sleeps(3000);
 				ret = p.goPost("m.weibo.cn", 443, submit(cookie,st,MyUtil.listVid.get(0)));
 				String msg=MyUtil.midWrod("msg\":\"","\",\"",ret);
-				f.prints(MyUtil.decodeUnicode(msg) + String.valueOf(index));
+				f.prints(MyUtil.decodeUnicode(msg) + String.valueOf(index+1));
 				if(msg.equals("\\u64cd\\u4f5c\\u6210\\u529f")) {
+					//延时操作
+					f.prints("休息3秒后签到." + String.valueOf(index+1));
+					MyUtil.sleeps(5000);
 					//签到
-					chackin(cookie);
+					chackin(cookie,index);
 				}
 			}
 		}else {
-			f.prints("登录失败:" + String.valueOf(index));
+			f.prints("登录失败:" + String.valueOf(index+1));
 		}
 		return 0;
 	}
 	
-	public void chackin(String cookie) {
+	public void chackin(String cookie,int index) {
 		Nets p = new Nets();
-		f.prints("正在签到." + String.valueOf(index));
+		f.prints("正在签到." + String.valueOf(index+1));
 		String ret = p.goPost("m.weibo.cn", 443, chackinData(cookie));
 		String st=MyUtil.midWrod("st: '", "',", ret);
-		f.prints("正在签到."+st + String.valueOf(index));
+		f.prints("正在签到.并休息5秒"+st + String.valueOf(index+1));
+		MyUtil.sleeps(5000);
 		ret = p.goPost("m.weibo.cn", 443, getInfo(cookie,st));
 		ret = p.goPost("m.weibo.cn", 443, getTask(st,cookie));
-		f.prints("签到完成."+st + String.valueOf(index));
+		f.prints("签到完成.休息9秒后登录下一个号."+st+"<==>" + String.valueOf(index+1));
 		
 	}
 	

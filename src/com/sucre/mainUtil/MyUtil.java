@@ -247,4 +247,15 @@ public class MyUtil {
        }   
        return buffer.toString();   
     }
+    /**
+     * 线程休眠.优雅一些,不用每次都try
+     */
+    public static void sleeps(int millis) {
+    	try {
+			Thread.sleep(millis);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
 }

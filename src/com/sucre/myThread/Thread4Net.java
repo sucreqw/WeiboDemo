@@ -4,6 +4,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import com.sucre.listUtil.MutiList;
+import com.sucre.mainUtil.MyUtil;
 
 /**
  * 多线程操作网络数据包! 定义为抽象类,方便回调子类的方法
@@ -35,6 +36,8 @@ abstract public class Thread4Net implements Runnable {
 
 		while(isWork){
 			int p = doWork(getIndex());
+			//延时操作
+			MyUtil.sleeps(9000);
 			//System.out.println(p);
 		}
 	}

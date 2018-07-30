@@ -17,8 +17,8 @@ public class SinaChackin extends Thread4Net{
 	//父类回调方法,要求必须覆盖
 	public int doWork(int index) {
 		SinaLogin sl=new SinaLogin(u,isCircle);
-		String cookie=MyUtil.listCookie.get(index);
-		sl.chackin(cookie);
+		String[] cookie=MyUtil.listCookie.get(index).split("\\|");
+		sl.chackin(cookie[0],index);
 		return index;
 	}
 	
