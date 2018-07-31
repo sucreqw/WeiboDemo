@@ -125,15 +125,47 @@ public class MyUtil {
 	}
 
 	/**
-	 * 生成指定范围内的随机数,默认用当前时间作为种子.
+	 * 生成指定范围内的随机数,
 	 * 
 	 * @param u 范围上限
 	 * @param l 范围下限
-	 * @return int 类型的随机数字
+	 * @return String 类型的随机数字
 	 */
-	public static int getRand(int u, int l) {
-		Random r = new Random(System.currentTimeMillis());
-		return r.nextInt(u - l) + l;
+	public static String getRand(int u, int l) {
+		Random r = new Random();
+		return String.valueOf(((r.nextInt(u - l) + l)));
+	}
+
+	/**
+	 * 随机生成一串字母数字组合的字符串
+	 * 
+	 * @param n 要生成字符的长度
+	 * @return 长度为n的随机字符串
+	 */
+	public static String makeNonce(int n) {
+		return makeSome(n, "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+	}
+
+	/**
+	 * 随机生成一串数字组合的字符串
+	 * 
+	 * @param n 要生成字符的长度
+	 * @return 长度为n的随机字符串
+	 */
+	public static String makeNumber(int n) {
+		return makeSome(n, "0123456789");
+	}
+
+	private static String makeSome(int n, String key) {
+		String ret = "";
+		if (n != 0) {
+
+			for (int i = 1; i <= n; i++) {
+				int p = Integer.parseInt(getRand(key.length(), 0));
+				ret += key.charAt(p);
+			}
+		}
+		return ret;
 	}
 
 	/**
@@ -187,14 +219,16 @@ public class MyUtil {
 	 * @param data     要追加保存的数据,默认会自动加上换行符!
 	 */
 	public static void outPutData(String fileName, String data) {
-		if("".equals(data)) {return;}
+		if ("".equals(data)) {
+			return;
+		}
 		// 定义文件
 		File file = new File(fileName);
 		try (
 				// 创建文件流
 				OutputStream out = new FileOutputStream(file, true);) {
 			// 写入文件!
-			data+="\r\n";
+			data += "\r\n";
 			out.write(data.getBytes());
 			out.close();
 		} catch (Exception e) {
@@ -202,60 +236,66 @@ public class MyUtil {
 		}
 
 	}
-    /**
-     *  截取某一段字符
-     * @param start 要截取字符的开始位置
-     * @param ends 要截取字符的结束位置
-     * @param str2mid 源字符串
-     * @return 返回start 和ends 所包含位置的字符串
-     */
-	public static String midWrod(String start,String ends,String str2mid) {
-		int begin,last;
-		if("".equals(str2mid)){return "";}
-		begin=str2mid.indexOf(start);
-		//找到字符
-		if (begin!=-1) {
-			last=str2mid.indexOf(ends, begin+start.length());
-			if(last!=-1) {
-				String ret=str2mid.substring(begin+start.length(), last);
+
+	/**
+	 * 截取某一段字符
+	 * 
+	 * @param start   要截取字符的开始位置
+	 * @param ends    要截取字符的结束位置
+	 * @param str2mid 源字符串
+	 * @return 返回start 和ends 所包含位置的字符串
+	 */
+	public static String midWrod(String start, String ends, String str2mid) {
+		int begin, last;
+		if ("".equals(str2mid)) {
+			return "";
+		}
+		begin = str2mid.indexOf(start);
+		// 找到字符
+		if (begin != -1) {
+			last = str2mid.indexOf(ends, begin + start.length());
+			if (last != -1) {
+				String ret = str2mid.substring(begin + start.length(), last);
 				return ret;
 			}
 		}
-		
+
 		return "";
 	}
+
 	/**
 	 * 
 	 * @param dataStr 要转换的字符例如\u64cd\u4f5c\u6210\u529f
 	 * @return 返回明名
 	 */
-    public static String decodeUnicode( String dataStr) {   
-       int start = 0;   
-       int end = 0;   
-       final StringBuffer buffer = new StringBuffer();   
-       while (start > -1) {   
-           end = dataStr.indexOf("\\u", start + 2);   
-           String charStr = "";   
-           if (end == -1) {   
-               charStr = dataStr.substring(start + 2, dataStr.length());   
-           } else {   
-               charStr = dataStr.substring(start + 2, end);   
-           }   
-           char letter = (char) Integer.parseInt(charStr, 16); // 16进制parse整形字符串。   
-           buffer.append(new Character(letter).toString());   
-           start = end;   
-       }   
-       return buffer.toString();   
-    }
-    /**
-     * 线程休眠.优雅一些,不用每次都try
-     */
-    public static void sleeps(int millis) {
-    	try {
+	public static String decodeUnicode(String dataStr) {
+		int start = 0;
+		int end = 0;
+		final StringBuffer buffer = new StringBuffer();
+		while (start > -1) {
+			end = dataStr.indexOf("\\u", start + 2);
+			String charStr = "";
+			if (end == -1) {
+				charStr = dataStr.substring(start + 2, dataStr.length());
+			} else {
+				charStr = dataStr.substring(start + 2, end);
+			}
+			char letter = (char) Integer.parseInt(charStr, 16); // 16进制parse整形字符串。
+			buffer.append(new Character(letter).toString());
+			start = end;
+		}
+		return buffer.toString();
+	}
+
+	/**
+	 * 线程休眠.优雅一些,不用每次都try
+	 */
+	public static void sleeps(int millis) {
+		try {
 			Thread.sleep(millis);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    }
+	}
 }
