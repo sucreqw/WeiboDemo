@@ -16,19 +16,60 @@ public class MyFunction extends Thread4Net {
 
 	//索引参数
 	private int index;
+	public MainFrom f;
 	// 传递参数给父类.
 	MyFunction(int u,boolean isCirCle) {
 		super(u,isCirCle);
+		f=MainFrom.GetInstance();
 	}
 
 	// 覆盖父类方法.
 	public int doWork(int index) {
 		this.index=index;
-		byte[] test=throwBatch();
+		
 		Nets p=new Nets();
-		String ret=p.goPost("api.weibo.cn", 443, throwBatch());
+		for(int i=0;i<=MyUtil.listVid.getSize()-1;i++) {
+			String vid=MyUtil.listVid.get(i);
+			String ret=p.goPost("api.weibo.cn", 443, liveInfo(vid));
+			f.prints("正在播放:" + String.valueOf(index+1) +"<==>" + String.valueOf(i) );
+		    if(ret.indexOf("100000")==-1) {
+		    	String tname=Thread.currentThread().getName();
+		    	if("ipchange".equals(tname)) {
+		    	MyUtil.cutAdsl(f.ipname.getText());
+		    	MyUtil.sleeps(1000);
+		    	MyUtil.connAdsl(f.fileName.getText(), f.ipaccount.getText(), f.ippsd.getText());
+		    	}
+		    }
+		}
+		
 		return index;
 	}
+	
+	
+	private byte[] liveInfo(String vid) {
+		
+		StringBuilder data=new StringBuilder(900);
+		String d="live_id="+ vid ;
+		data.append("POST https://api.weibo.cn/2/live/getinfo?networktype=wifi&moduleID=700&wb_version=3449&c=android&i=6hj7im7&s=c3156281&ft=0&ua=oppo-oppo%20r11__weibo__7.9.1__android__android5.1.1&wm=5091_0008&v_f=2&v_p=50&from=1007498895823&gsid=_2AkMvpe-6f8NhqwJRmP8RxWPqZYh_yAvEieKZ-R5hJRM3HRl-3D9kqkgLtRV9i9aROB8dVPyTQGLu6CtwzEaZmw..&lang=zh_CN&skin=default&oldwm=5091_0008&sflag=1 HTTP/1.1\r\n");
+		data.append("Accept: */*\r\n");
+		data.append("Accept-Language: zh-cn\r\n");
+		data.append("Cache-Control: no-cache\r\n");
+		data.append("Content-Type: application/x-www-form-urlencoded\r\n");
+		data.append("User-Agent: Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2)\r\n");
+		data.append("Host: api.weibo.cn\r\n");
+		data.append("Content-Length: "+ d.length() +"\r\n");
+		data.append("Connection: Keep-Alive\r\n");
+		data.append("\r\n");
+		data.append( d + "\r\n");
+		data.append("\r\n");
+		
+		return data.toString().getBytes();
+	}
+	
+	
+	
+	
+	
 	
 	/**
 	 * 组合多种数据成为http数据包,这里真的很难写得优雅!!请原谅!

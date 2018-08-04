@@ -34,15 +34,18 @@ public class MainFrom extends JFrame implements ActionListener {
 	JTextField feedBack = new JTextField(2);
 	JTextField fileName = new JTextField(3);
 	JTextField tNum = new JTextField(4);
-
+	JTextField ipaccount = new JTextField();
+	JTextField ipname = new JTextField();
+	JTextField ippsd = new JTextField();
 	// 创建一个label
 	JLabel messageLabel = new JLabel();
-
+	
 	// 定义帮忙信息,jlabel 支持html内容
 	String help = "<html> 1,在文本框输入d1,回车,等于删第一个vid.<br>2,在文本框输入showvid,回车,等于显示第一个vid<br></html> ";
 
 	// 定义一个自己.
 	static MainFrom f = new MainFrom("统一窗体");
+
 
 	// 用构造器新建一个JFrame,并设置标题.
 	private MainFrom(String title) {
@@ -55,7 +58,7 @@ public class MainFrom extends JFrame implements ActionListener {
 		// 设置窗体大小不可调整
 		jf.setResizable(false);
 		// 设置窗体布局为null,以便设置按钮
-		jf.setLayout(null);
+		jf.getContentPane().setLayout(null);
 		// 设置窗体在屏幕的位置
 		jf.setLocation(400, 150);
 		// 设置窗体为可见状态
@@ -84,18 +87,34 @@ public class MainFrom extends JFrame implements ActionListener {
 		messageLabel.setText(help);
 		tNum.setText("10");
 		// 把按钮增加到窗体
-		jf.add(loadin);
-		jf.add(loadVid);
-		jf.add(addVid);
-		jf.add(loadCookie);
-		jf.add(login);
-		jf.add(vote);
+		jf.getContentPane().add(loadin);
+		jf.getContentPane().add(loadVid);
+		jf.getContentPane().add(addVid);
+		jf.getContentPane().add(loadCookie);
+		jf.getContentPane().add(login);
+		jf.getContentPane().add(vote);
 		// 加载textbox到窗体
-		jf.add(feedBack);
-		jf.add(fileName);
-		jf.add(tNum);
+		jf.getContentPane().add(feedBack);
+		jf.getContentPane().add(fileName);
+		jf.getContentPane().add(tNum);
 		// 加载label到窗体
-		jf.add(messageLabel);
+		jf.getContentPane().add(messageLabel);
+		
+		
+		ipname.setText("宽带连接");
+		ipname.setBounds(10, 60, 130, 20);
+		jf.getContentPane().add(ipname);
+		ipname.setColumns(10);
+		
+		
+		ipaccount.setBounds(10, 80, 130, 21);
+		jf.getContentPane().add(ipaccount);
+		ipaccount.setColumns(10);
+		
+		
+		ippsd.setBounds(10, 100, 130, 20);
+		jf.getContentPane().add(ippsd);
+		ippsd.setColumns(10);
 		// 添加控件之后要重画窗体.
 		jf.repaint();
 
@@ -170,7 +189,7 @@ public class MainFrom extends JFrame implements ActionListener {
 	private void login_click() {
 		if (MyUtil.listVid.getSize() != 0) {
 			Thread4Net tt = new SinaLogin(MyUtil.listId.getSize() - 1, false);
-			Thread t = new Thread(tt);
+			Thread t = new Thread(tt,"ipchange");
 			t.start();
 		} else {
 			messageLabel.setText("vid不能为空...");
@@ -179,8 +198,9 @@ public class MainFrom extends JFrame implements ActionListener {
 
 	// 按钮开始被点击.
 	private void vote_click() {
-		if (MyUtil.listVid.getSize() != 0 && MyUtil.listCookie.getSize()!=0) {
-			Thread4Net tt = new SinaChackin(MyUtil.listCookie.getSize() - 1, false);
+		//if (MyUtil.listVid.getSize() != 0 && MyUtil.listCookie.getSize()!=0) {
+		if (MyUtil.listVid.getSize() != 0 ) {
+			Thread4Net tt = new MyFunction(0, true);
 			Thread t = new Thread(tt);
 			t.start();
 		} else {

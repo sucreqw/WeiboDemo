@@ -37,7 +37,7 @@ abstract public class Thread4Net implements Runnable {
 		while(isWork){
 			int p = doWork(getIndex());
 			//延时操作
-			MyUtil.sleeps(9000);
+			//MyUtil.sleeps(9000);
 			//System.out.println(p);
 		}
 	}

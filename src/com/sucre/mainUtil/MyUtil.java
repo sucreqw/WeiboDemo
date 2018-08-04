@@ -1,10 +1,12 @@
 package com.sucre.mainUtil;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
@@ -298,4 +300,71 @@ public class MyUtil {
 			e.printStackTrace();
 		}
 	}
+	
+   
+	/** 
+        * 执行CMD命令,并返回String字符串 
+     */  
+    public static String executeCmd(String strCmd)  {  
+        Process p;
+        StringBuilder sbCmd = new StringBuilder(); 
+		try {
+			p = Runtime.getRuntime().exec("cmd /c " + strCmd);
+		
+        
+        BufferedReader br = new BufferedReader(new InputStreamReader(p  
+                .getInputStream()));  
+        String line;  
+        while ((line = br.readLine()) != null) {  
+            sbCmd.append(line + "\n");  
+        }  
+		} catch (Exception e) {
+			e.printStackTrace();
+		}  
+        
+        
+        return sbCmd.toString();  
+    }  
+  
+   /**
+    *  建立 一个宽带连接	   
+    * @param adslTitle 宽带连接的铝盘
+    * @param adslName 宽带连接的账号
+    * @param adslPass 宽带连接的密码
+    * @return
+    */
+    public static boolean connAdsl(String adslTitle, String adslName, String adslPass)  {  
+        System.out.println("正在建立连接.");  
+        String adslCmd = "rasdial " + adslTitle + " " + adslName + " "  
+                + adslPass;  
+        String tempCmd = executeCmd(adslCmd);  
+        // 判断是否连接成功  
+        if (tempCmd.indexOf("已连接") > 0) {  
+            System.out.println("已成功建立连接.");  
+            return true;  
+        } else {  
+            System.err.println(tempCmd);  
+            System.err.println("建立连接失败");  
+            return false;  
+        }  
+    }  
+  
+    /**
+     * 断开adsl拨号
+     * @param adslTitle 宽带连接的名称
+     * @return
+     */
+    public static boolean cutAdsl(String adslTitle)  {  
+        String cutAdsl = "rasdial " + adslTitle + " /disconnect";  
+        String result = executeCmd(cutAdsl);  
+         
+        if (result.indexOf("没有连接")!=-1){  
+            System.err.println(adslTitle + "连接不存在!");  
+            return false;  
+        } else {  
+            System.out.println("连接已断开");  
+            return true;  
+        }  
+    }  
+	
 }
